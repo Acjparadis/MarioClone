@@ -1,0 +1,17 @@
+Level
+    -mobile objects
+        -enemies
+            -different kinds of enemies?
+        -player
+    -static objects
+        -ground
+            -perhaps by lack of ground?
+        -blocks
+            -indestructible
+            -destructible
+            -drops
+power ups
+    -1up
+    -Big mushroom?
+Level Selector
+    -?
