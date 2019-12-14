@@ -6,6 +6,7 @@ public class DropBlock extends Entity {
     private final Image usedImage;
     private boolean isUsed = false;
     private Drop drop;
+    private boolean hasDropped = false;
     
     public DropBlock(Image image, int[] position, Image usedImage, Drop drop){
         super(image, position);
@@ -60,6 +61,15 @@ public class DropBlock extends Entity {
 
     public Drop getDrop(){
         return drop;
+    }
+
+    public Drop useDrop(){
+        hasDropped = true;
+        return drop;
+    }
+
+    public boolean getHasDropped(){
+        return hasDropped;
     }
 
     @Override

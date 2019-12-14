@@ -24,11 +24,10 @@ public class Level {
     JPanel canvas = new JPanel(){
         public synchronized void paintComponent(Graphics g){
             super.paintComponent(g);
-            Graphics graphics = g;
-            graphics.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            g.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             long startTime = System.nanoTime()/1000000;
             if (player != null){
-                Draw(graphics, null);
+                Draw(g, null);
             }
             System.out.println("Draw Time: " + (System.nanoTime()/1000000 - startTime));
         }
@@ -92,6 +91,9 @@ public class Level {
             g2d.drawImage(inputImage, 0, 0, inputImage.getWidth()*scale, inputImage.getHeight()*scale, null);
             enemies.add(new Goomba(image, image.getWidth()*8, canvas.getHeight()-image.getWidth()*2, image, scale));
             enemies.add(new Goomba(image, image.getWidth()*10, canvas.getHeight()-image.getWidth()*10, image, scale));
+            for (int i = 2; i < 70; i++){
+                enemies.add(new Goomba(image, image.getWidth()*(i*2+8), canvas.getHeight()-image.getWidth()*2, image, scale));
+            }
             
             file = new File("DropBlock.png");
             inputImage = ImageIO.read(file);
@@ -146,6 +148,12 @@ public class Level {
     }
 
     public void gameloop(){
+        //scroll
+        int scrolled = (int)scrollPane.getHorizontalScrollBar().getValue();
+        player.gameloop(scrolled);
+        if (player.getPosition()[0] - scrolled > rightScroll && !(scrolled >= scrollPane.getHorizontalScrollBar().getModel().getMaximum())){
+            scrollPane.getHorizontalScrollBar().setValue(player.getPosition()[0] - rightScroll);
+        }
         //remove enemies and blocks that have been dead long enough
         enemies.removeIf(i -> i.shouldRemove());
         destructBlocks.removeIf(i -> i.shouldRemove());
@@ -163,6 +171,7 @@ public class Level {
             }
             else {
                 int[] enemyPosition = enemies.elementAt(i).getPosition();
+                enemies.elementAt(i).gameloop(position);
                 for (int x = 0; x < destructBlocks.size(); x++) {
                     enemies.elementAt(i).impact(destructBlocks.elementAt(x), enemyPosition);
                 }
@@ -172,16 +181,16 @@ public class Level {
                 for (DropBlock dropBlock : dropBlocks){
                     enemies.elementAt(i).impact(dropBlock, enemyPosition);
                 }
-                enemies.elementAt(i).gameloop(position);
             }
         }
         for (int i = 0; i < drops.size(); i++) {
             boolean[] dropImpacting = drops.elementAt(i).isIntersecting(position[0], position[1]);
-            if (/* (dropImpacting[0] || dropImpacting[1]) */false && player.isAlive() && drops.elementAt(i).isAlive()){
+            if ((dropImpacting[0] || dropImpacting[1]) && player.isAlive() && drops.elementAt(i).isAlive()){
                 drops.elementAt(i).Die();
             }
             else {
                 int[] dropPosition = drops.elementAt(i).getPosition();
+                drops.elementAt(i).gameloop();
                 for (int x = 0; x < destructBlocks.size(); x++) {
                     drops.elementAt(i).impact(destructBlocks.elementAt(x), dropPosition);
                 }
@@ -191,7 +200,6 @@ public class Level {
                 for (DropBlock dropBlock : dropBlocks){
                     drops.elementAt(i).impact(dropBlock, dropPosition);
                 }
-                drops.elementAt(i).gameloop();
             }
         }
         for (int i = 0; i < destructBlocks.size(); i++) {
@@ -204,15 +212,9 @@ public class Level {
         }
         for (DropBlock dropBlock : dropBlocks) {
             player.impact(dropBlock.isIntersecting(position[0], position[1], true), dropBlock.getPosition());
-            if (dropBlock.isUsed() && dropBlock.getDrop() != null){
-                drops.add(dropBlock.getDrop());
+            if (dropBlock.isUsed() && !dropBlock.getHasDropped()){
+                drops.add(dropBlock.useDrop());
             }
-        }
-        //scroll
-        int scrolled = (int)scrollPane.getHorizontalScrollBar().getValue();
-        player.gameloop(scrolled);
-        if (player.getPosition()[0] - scrolled > rightScroll && !(scrolled >= scrollPane.getHorizontalScrollBar().getModel().getMaximum())){
-            scrollPane.getHorizontalScrollBar().setValue(player.getPosition()[0] - rightScroll);
         }
         canvas.repaint();
     }
@@ -242,6 +244,9 @@ public class Level {
         }
         for (DropBlock dropBlock : dropBlocks){
             dropBlock.Draw(g, observer);
+        }
+        for (Drop drop : drops){
+            drop.Draw(g, observer);
         }
         player.Draw(g, observer);
     }

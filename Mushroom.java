@@ -41,6 +41,5 @@ public class Mushroom extends Drop {
         }
         setImpact(new boolean[]{false, false});
         setWouldImpact(new boolean[]{false, false, false, false});
-        throw new Error("position: " + getPosition()[0] + ", " + getPosition()[1]);
     }
 }
