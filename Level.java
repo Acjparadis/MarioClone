@@ -60,7 +60,7 @@ public class Level {
             image = new BufferedImage(inputImage.getWidth()*scale, inputImage.getHeight()*scale, inputImage.getType());
             g2d = image.createGraphics();
             g2d.drawImage(inputImage, 0, 0, inputImage.getWidth()*scale, inputImage.getHeight()*scale, null);
-            int numGround = 50;
+            int numGround = 100;
             ground = new Ground[numGround];
             for (int i = 0; i < numGround; i++) {
                 ground[i] = new Ground(image, image.getWidth()*i, canvas.getHeight()-image.getHeight());
@@ -72,17 +72,15 @@ public class Level {
             g2d.drawImage(inputImage, 0, 0, inputImage.getWidth()*scale, inputImage.getHeight()*scale, null);
             destructBlocks.add(new DestructibleBlock(image, image.getWidth(), canvas.getHeight()-image.getHeight()*2, image));
             destructBlocks.add(new DestructibleBlock(image, image.getWidth(), canvas.getHeight()-image.getHeight()*5, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*3, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*4, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*5, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*6, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*7, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*8, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*9, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*20, canvas.getHeight()-image.getHeight()*3, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*30, canvas.getHeight()-image.getHeight()*3, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*40, canvas.getHeight()-image.getHeight()*3, image));
-            destructBlocks.add(new DestructibleBlock(image, image.getWidth()*49, canvas.getHeight()-image.getHeight()*2, image));
+            for (int i = 3; i < 10; i++){
+                destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10, canvas.getHeight()-image.getHeight()*i, image));
+            }
+            for (int i = 2; i < 10; i++){
+                destructBlocks.add(new DestructibleBlock(image, image.getWidth()*99, canvas.getHeight()-image.getHeight()*i, image));
+            }
+            for (int i = 2; i < numGround/10; i++){
+                destructBlocks.add(new DestructibleBlock(image, image.getWidth()*10*i, canvas.getHeight()-image.getHeight()*3, image));
+            }
 
             file = new File("Goomba.png");
             inputImage = ImageIO.read(file);
@@ -91,8 +89,8 @@ public class Level {
             g2d.drawImage(inputImage, 0, 0, inputImage.getWidth()*scale, inputImage.getHeight()*scale, null);
             enemies.add(new Goomba(image, image.getWidth()*8, canvas.getHeight()-image.getWidth()*2, image, scale));
             enemies.add(new Goomba(image, image.getWidth()*10, canvas.getHeight()-image.getWidth()*10, image, scale));
-            for (int i = 2; i < 70; i++){
-                enemies.add(new Goomba(image, image.getWidth()*(i*2+8), canvas.getHeight()-image.getWidth()*2, image, scale));
+            for (int i = 2; i < 1520; i++){
+                enemies.add(new Goomba(image, image.getWidth()*(i+64)/16, canvas.getHeight()-image.getWidth()*2, image, scale));
             }
             
             file = new File("DropBlock.png");

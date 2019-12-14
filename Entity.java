@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 
-public abstract class Entity {
+public class Entity {
     private Image image;
     private int[] position;
     

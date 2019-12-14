@@ -2,7 +2,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.ImageObserver;
 
-public abstract class DestructibleEntity extends Entity {
+public class DestructibleEntity extends Entity {
     private Image death;
     private boolean isAlive = true;
     private int deathTime = 0;
